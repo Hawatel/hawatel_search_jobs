@@ -1,0 +1,1 @@
+require 'hawatel_search_jobs/helpers/base'

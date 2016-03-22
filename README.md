@@ -61,7 +61,7 @@ end
 #### Get first page of job offers
 There are two ways to read the returned job offers.
 
-1. Returned job offers by search_jobs method:
++ Returned job offers by search_jobs method:
 ```ruby
   client = HawatelSearchJobs::Client.new
   result = client.search_jobs({:keywords => 'ruby'})
@@ -72,7 +72,7 @@ There are two ways to read the returned job offers.
     p result[:careerjet]
 ```
 
-2. Access to the instance variable jobs_table.
++ Access to the instance variable jobs_table.
 Instance variable *jobs_table* always has last returned job offers.
 ```ruby
   client = HawatelSearchJobs::Client.new

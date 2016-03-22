@@ -7,7 +7,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Hawate
 
    ```sh
    # Clone your fork of the repo into the current directory
-   git clone https://github.com/<your-username>/hawatel_ps
+   git clone https://github.com/<your-username>/hawatel_search_jobs
    # Navigate to the newly cloned directory
    cd hawatel_search_jobs
    # Assign the original repo to a remote called "upstream"

@@ -1,6 +1,12 @@
+[![Build Status](https://travis-ci.org/Hawatel/hawatel_search_jobs.svg?branch=master)](https://travis-ci.org/Hawatel/hawatel_search_jobs)
+[![Code Climate](https://codeclimate.com/github/Hawatel/hawatel_search_jobs/badges/gpa.svg)](https://codeclimate.com/github/Hawatel/hawatel_search_jobs)
+[![Inline docs](http://inch-ci.org/github/Hawatel/hawatel_search_jobs.svg?branch=master)](http://inch-ci.org/github/Hawatel/hawatel_search_jobs)
+[![Gem Version](https://badge.fury.io/rb/hawatel_search_jobs.svg)](https://badge.fury.io/rb/hawatel_search_jobs)
+[![Dependency Status](https://gemnasium.com/Hawatel/hawatel_search_jobs.svg)](https://gemnasium.com/Hawatel/hawatel_search_jobs)
+
 # Hawatel Search Jobs
 
-Hawatel_job_search, it is gem which provides ease access to API from popular job websites to get current job offers. At this moment, supported backends are indeed.com, careerjet.com,  xing.com, careerbuilder.com and reed.co.uk.
+Hawatel_search_jobs, it is gem which provides ease access to API from popular job websites to get current job offers. At this moment, supported backends are indeed.com, careerjet.com, xing.com, careerbuilder.com and reed.co.uk.
 
 Before you can start using the gem, you need have an accounts/tokens for each portal where is required by API.
 
@@ -80,7 +86,7 @@ Instance variable *jobs_table* always has last returned job offers.
   p client.jobs_table
 ```
 
-Keep in mind that each API has a limit of returned records. For consistency, each API returns maximum `25` records.
+Each API has a limit of returned records. For consistency, each API returns maximum `25` records.
 
 #### Get next page of job offers
 ```ruby
@@ -100,7 +106,7 @@ Keep in mind that each API has a limit of returned records. For consistency, eac
     job_offers << client.jobs_table
   end
 ```
-Keep in mind if keywords will be too general probably each API will return loads of data and then a daily limit for each API provider can be exceeded.
+If keywords will be too general probably each API will return loads of data and then a daily limit for an API provider can be exceeded.
 Reed about your daily limit for each API on the provider side.
 
 #### How many job offers were found
@@ -110,10 +116,10 @@ Reed about your daily limit for each API on the provider side.
   p client.count # for all APIs
   p client.count('indeed') # for a particular API
 ```
-Keep in mind the `client.count` returns count of total results for each APIs which can be returned to you if you will use `client.next` method.
+The `client.count` returns count of total results for each APIs which can be returned to you if you use `client.next` method.
 
 ## Structure of job offers table
-Below is an example for indeed but each of APIs has the same result structure.
+Below is an example for indeed but each API has the same result structure.
 ```ruby
   client = HawatelSearchJobs::Client.new
   client.search_jobs({:keywords => 'ruby'})

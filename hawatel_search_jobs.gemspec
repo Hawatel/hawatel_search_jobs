@@ -9,10 +9,10 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Przemyslaw Mantaj','Daniel Iwaniuk']
   spec.email         = ['przemyslaw.mantaj@hawatel.com', 'daniel.iwaniuk@hawatel.com']
 
-  spec.summary       = %q{Hawatel_job_search, it is gem which provides ease access to API from popular job websites to get current job offers.}
-  spec.description   = %q{Hawatel_job_search, it is gem which provides ease access to API from popular job websites
+  spec.summary       = %q{Hawatel_search_jobs, it is gem which provides ease access to API from popular job websites to get current job offers.}
+  spec.description   = %q{Hawatel_search_jobs, it is gem which provides ease access to API from popular job websites
                          to get current job offers.  At this moment, supported backends are indeed.com, careerjet.com,
-                         xing.com, careerbuilder.com and reed.com.}
+                         xing.com, careerbuilder.com and reed.co.uk.}
   spec.homepage      = "http://github.com/Hawatel/hawatel_search_jobs"
   spec.license       = "MIT"
 

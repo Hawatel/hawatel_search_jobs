@@ -44,9 +44,15 @@ describe HawatelSearchJobs::Api::CareerJet  do
   it "call search() with location param" do
     result =  HawatelSearchJobs::Api::CareerJet.search(:settings => HawatelSearchJobs.careerjet,
                                                        :query => { :keywords => 'ruby', :location => 'London' })
+    location_found = false
     result.jobs.each do |job|
-      expect(job.location).to include("London")
+      if job.location =~ /London/
+        location_found = true
+        break
+      end
     end
+
+    expect(location_found).to eq(true)
   end
 
 

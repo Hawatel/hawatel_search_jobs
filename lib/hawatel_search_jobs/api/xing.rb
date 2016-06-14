@@ -90,7 +90,7 @@ module HawatelSearchJobs::Api
       # @return [Array<OpenStruct>]
       def parse_raw_data(result)
         jobs = Array.new
-        return jobs if result['jobs'].to_s.empty?
+        return jobs if result[:jobs].to_s.empty?
         result[:jobs][:items].each do |offer|
           job = Hash.new
           job[:jobtitle] = offer[:title]

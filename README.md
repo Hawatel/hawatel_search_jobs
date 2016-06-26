@@ -99,12 +99,12 @@ Each API has a limit of returned records. For consistency, each API returns maxi
 ```ruby
   client = HawatelSearchJobs::Client.new
   client.search_jobs({:keywords => 'ruby'})
-  
+
   job_offers = Array.new
-  
-  while(client.next) do
+
+  begin
     job_offers << client.jobs_table
-  end
+  end while(client.next)
 ```
 If keywords will be too general probably each API will return loads of data and then a daily limit for an API provider can be exceeded.
 Reed about your daily limit for each API on the provider side.
@@ -124,15 +124,15 @@ Below is an example for indeed but each API has the same result structure.
   client = HawatelSearchJobs::Client.new
   client.search_jobs({:keywords => 'ruby'})
   result = client.jobs_table
-  
+
   result[:indeed][:code]            # HTTP status code (see https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
   result[:indeed][:message]         # HTTP message (seee https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
-  
+
   result[:indeed][:totalResults]    # Total results of job offers which matches to your search criteria on API provider
   result[:indeed][:page]            # Current results page number counted from index 0
   result[:indeed][:last]            # Last results page number
   result[:indeed][:key]             # Internal key which usuely keep last URL sent to API or last used keywords
-  
+
   result[:indeed][:jobs]            # OpenStruct array which store returned job offers from API provider
   result[:indeed][:jobs].jobtitle   # Job title
   result[:indeed][:jobs].location   # Job location
@@ -149,4 +149,3 @@ See [CONTRIBUTING](CONTRIBUTING.md)
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-

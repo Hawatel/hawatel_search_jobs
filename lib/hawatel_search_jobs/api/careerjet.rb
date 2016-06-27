@@ -10,6 +10,8 @@ module HawatelSearchJobs
             :company  => ''
         }
 
+        RESULT_LIMIT = 25
+
         # Search jobs based on specified keywords or location
         #
         # @param args [Hash]
@@ -89,11 +91,14 @@ module HawatelSearchJobs
         #
         # @return [String] ready to call URL
         def build_url(args)
-          keywords = args[:query][:keywords] if !args[:query][:keywords].to_s.empty?
-          api_url  = args[:settings][:api]   if !args[:settings][:api].to_s.empty?
+          keywords  = args[:query][:keywords] if !args[:query][:keywords].to_s.empty?
+          api_url   = args[:settings][:api]   if !args[:settings][:api].to_s.empty?
+          page_size = args[:settings][:page_size].to_s.empty? ? RESULT_LIMIT : args[:settings][:page_size].to_i
+          page_size = RESULT_LIMIT if page_size <= 0 || page_size > 99
+
           if keywords && api_url
-            !args[:query][:location].to_s.empty? ? location = args[:query][:location] : location = 'europe'
-            "http://#{api_url}/search?locale_code=US_en&pagesize=25&sort=date&keywords=#{keywords}&location=#{location}&page=1"
+            !args[:query][:location].to_s.empty? ? location = args[:query][:location] : location = 'worldwide'
+            "http://#{api_url}/search?locale_code=US_en&pagesize=#{page_size}&sort=date&keywords=#{keywords}&location=#{location}&page=1"
           end
         end
 

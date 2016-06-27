@@ -11,6 +11,8 @@ module HawatelSearchJobs::Api
           :company  => ''
       }
 
+      RESULT_LIMIT = 25
+
       # @see https://github.com/xing/xing_api
       # Search jobs based on specified keywords
       #
@@ -30,9 +32,13 @@ module HawatelSearchJobs::Api
       def search(args)
         args[:query] = DEFAULT.merge(args[:query]) if args[:query]
         keywords = args[:query][:keywords]
-        result = send_request({:keywords => keywords, :offset => 0, :settings => args[:settings]})
+        page_size = args[:settings][:page_size].to_s.empty? ? RESULT_LIMIT : args[:settings][:page_size].to_i
+        page_size = RESULT_LIMIT if page_size <= 0 || page_size > 100
+
+        result = send_request({:keywords => keywords, :offset => 0, :settings => args[:settings], :page_size => page_size})
+
         if !result[:code]
-          set_attributes({:result => result, :page => 0, :keywords => keywords})
+          set_attributes({:result => result, :page => 0, :keywords => keywords, :page_size => page_size})
         else
           OpenStruct.new({:code => 501, :msg => 'incorrect settings'})
         end
@@ -50,8 +56,11 @@ module HawatelSearchJobs::Api
       # @return [Hash<OpenStruct>]
       def page(args)
         args[:page] = 0 if args[:page].nil?
-        result = XingApi::Job.search(args[:query_key], {:limit => 25, :offset => args[:page]*25})
-        set_attributes({:result => result, :page => args[:page], :keywords => args[:query_key]})
+        page_size = args[:settings][:page_size].to_s.empty? ? RESULT_LIMIT : args[:settings][:page_size].to_i
+        page_size = RESULT_LIMIT if page_size <= 0 || page_size > 100
+
+        result = XingApi::Job.search(args[:query_key], {:limit => page_size, :offset => args[:page]*page_size})
+        set_attributes({:result => result, :page => args[:page], :keywords => args[:query_key], :page_size => page_size})
       rescue XingApi::Error => e
         {:code => e.status_code, :msg => e.text}
       end
@@ -66,7 +75,8 @@ module HawatelSearchJobs::Api
       # @return [Hash<OpenStruct>]
       def send_request(args)
         set_settings(args[:settings])
-        XingApi::Job.search(args[:keywords], {:limit => 25, :offset => 0})
+
+        XingApi::Job.search(args[:keywords], {:limit => args[:page_size], :offset => 0})
       rescue XingApi::Error => e
         {:code => e.status_code, :msg => e.text}
       end
@@ -79,7 +89,7 @@ module HawatelSearchJobs::Api
         attributes[:code]  = '200'
         attributes[:msg]   = "OK"
         attributes[:page]  = args[:page]
-        attributes[:last]  = args[:result][:jobs][:total] / 25
+        attributes[:last]  = args[:result][:jobs][:total] / args[:page_size]
         attributes[:key]   = args[:keywords]
         attributes[:jobs]  = parse_raw_data(args[:result])
         OpenStruct.new(attributes)

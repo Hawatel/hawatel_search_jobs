@@ -37,6 +37,8 @@ module HawatelSearchJobs
         # @return [Hash] First page of the result (see constant RESULT_LIMIT)
         def search(args)
           args[:query] = DEFAULT.merge(args[:query]) if args[:query]
+          args[:page_size] = args[:settings][:page_size].to_s.empty? ? RESULT_LIMIT : args[:settings][:page_size].to_i
+          args[:page_size] = RESULT_LIMIT if args[:page_size] <= 0 || args[:page_size] > 100
 
           if args[:query_key].nil?
             url_request = prepare_conn_string(args) + prepare_query(args)
@@ -45,7 +47,7 @@ module HawatelSearchJobs
           end
 
           response = api_request(url_request, args[:settings][:clientid])
-          attributes = build_jobs_table(response, url_request)
+          attributes = build_jobs_table(response, url_request, args[:page_size])
           OpenStruct.new(attributes)
         end
 
@@ -65,9 +67,12 @@ module HawatelSearchJobs
         # @return [Hash] Job offers from specific page
         def page(args)
           page = args[:page].to_i || 0
+          page_size = args[:settings][:page_size].to_s.empty? ? RESULT_LIMIT : args[:settings][:page_size].to_i
+          page_size = RESULT_LIMIT if page_size <= 0 || page_size > 100
+
           if args[:query_key]
-            limit = result_limit(args[:query_key])
-            url_request = args[:query_key].gsub(/&resultsToSkip=\d+/, '') << "&resultsToSkip=#{page * limit}"
+            #limit = result_limit(args[:query_key])
+            url_request = args[:query_key].gsub(/&resultsToSkip=\d+/, '') << "&resultsToSkip=#{page * page_size}"
             args[:query_key] = url_request
             search(args)
           end
@@ -75,7 +80,7 @@ module HawatelSearchJobs
 
         private
 
-        def build_jobs_table(response, url_request)
+        def build_jobs_table(response, url_request, page_size)
           attributes  = Hash.new
           attributes[:code] = response.code.to_i
           attributes[:msg]  = response.message
@@ -93,7 +98,7 @@ module HawatelSearchJobs
               if !json_response['results'].to_s.empty?
                 attributes[:totalResults] = json_response['totalResults'] || 0
 
-                page_info = paging_info(url_request, attributes[:totalResults])
+                page_info = paging_info(url_request, attributes[:totalResults], page_size)
                 attributes[:page] = page_info.page
                 attributes[:last] = page_info.last
 
@@ -125,7 +130,7 @@ module HawatelSearchJobs
         end
 
         def prepare_conn_string(args)
-          conn_string = "https://#{args[:settings][:api]}/#{args[:settings][:version]}/search?resultsToTake=#{RESULT_LIMIT}&"
+          conn_string = "https://#{args[:settings][:api]}/#{args[:settings][:version]}/search?resultsToTake=#{args[:page_size]}&"
           conn_string
         end
 
@@ -148,33 +153,32 @@ module HawatelSearchJobs
           raise "Cannot parse raw data: #{data}"
         end
 
-        def result_limit(url)
-          result = url.match(/\resultsToTake=(\d+)/)
-          result ? result[1].to_i : RESULT_LIMIT
-        end
+        # def result_limit(url)
+        #   result = url.match(/\resultsToTake=(\d+)/)
+        #   result ? result[1].to_i : RESULT_LIMIT
+        # end
 
         def result_skip(url)
           result = url.match(/\&resultsToSkip=(\d+)/)
           result ? result[1].to_i : 0
         end
 
-        def paging_info(url, total_result)
+        def paging_info(url, total_result, page_size)
           return OpenStruct.new({:page => nil, :last => nil}) if total_result == 0
 
-          result_limit = result_limit(url)
           result_skip = result_skip(url)
 
           if result_skip == 0 && total_result > 0
             page = 0
           else
-            page = (result_skip / result_limit).to_i
+            page = (result_skip / page_size).to_i
           end
 
-          mod = total_result.to_i % result_limit.to_i
+          mod = total_result.to_i % page_size.to_i
           if mod == 0
-            last = (total_result.to_i / result_limit.to_i) - 1
+            last = (total_result.to_i / page_size.to_i) - 1
           else
-            last = (total_result.to_i / result_limit.to_i).to_i
+            last = (total_result.to_i / page_size.to_i).to_i
           end
 
           OpenStruct.new({:page => page, :last => last})

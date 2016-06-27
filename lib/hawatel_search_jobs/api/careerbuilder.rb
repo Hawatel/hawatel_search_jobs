@@ -114,8 +114,11 @@ module HawatelSearchJobs
         end
 
         def prepare_conn_string(args)
+          page_size = args[:settings][:page_size].to_s.empty? ? RESULT_LIMIT : args[:settings][:page_size].to_i
+          page_size = RESULT_LIMIT if page_size <= 0 || page_size > 100
+
           conn_string = "https://#{args[:settings][:api]}/#{args[:settings][:version]}/jobsearch?" \
-          "PerPage=#{RESULT_LIMIT}&DeveloperKey=#{args[:settings][:clientid]}&"
+          "PerPage=#{page_size}&OrderBy=Date&DeveloperKey=#{args[:settings][:clientid]}&"
 
           conn_string
         end

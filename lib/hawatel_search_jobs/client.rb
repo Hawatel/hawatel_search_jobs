@@ -40,7 +40,7 @@ module HawatelSearchJobs
     # Search Jobs by specific criteria
     # @param query [Hash]
     # @option query [String] :keywords
-    # @option query [String] :location
+    # @option query [String] :location not working in Xing API
     # @option query [String] :company not working in Reed API
     # @example
     #       HawatelSearchJobs.configure do |config|
@@ -48,25 +48,30 @@ module HawatelSearchJobs
     #           config.indeed[:api]       = 'api.indeed.com'
     #           config.indeed[:version]   = '2'
     #           config.indeed[:publisher] = 'secret-key'
+    #           config.indeed[:page_size] = 25 # allowed range <1,25>
     #
     #           config.xing[:activated]           = true
     #           config.xing[:consumer_key]        = 'secret-key'
     #           config.xing[:consumer_secret]     = 'secret-key'
     #           config.xing[:oauth_token]         = 'secret-key'
     #           config.xing[:oauth_token_secret]  = 'secret-key'
+    #           config.xing[:page_size]           = 25 # allowed range <1,100>
     #
     #           config.reed[:activated] = true
     #           config.reed[:api]       = 'reed.co.uk/api'
     #           config.reed[:clientid]  = 'secret-key'
     #           config.reed[:version]   = '1.0'
+    #           config.reed[:page_size] = 25 # allowed range <1,100>
     #
     #           config.careerbuilder[:activated]  = true
     #           config.careerbuilder[:api]        = 'api.careerbuilder.com'
     #           config.careerbuilder[:clientid]   = 'secret-key'
     #           config.careerbuilder[:version]    = 'v2'
+    #           config.careerbuilder[:page_size]  = 25 # allowed range <1,100>
     #
     #           config.careerjet[:activated]   = true
     #           config.careerjet[:api]         = 'public.api.careerjet.net'
+    #           config.careerjet[:page_size]   = 25 # allowed range <1,99>
     #         end
     #
     #       client = HawatelSearchJobs::Client.new

@@ -35,25 +35,30 @@ HawatelSearchJobs.configure do |config|
   config.indeed[:api]       = 'api.indeed.com'
   config.indeed[:version]   = '2'
   config.indeed[:publisher] = 'secret-key'
+  config.indeed[:page_size] = 25 # allowed range <1,25>
 
   config.xing[:activated]           = true
   config.xing[:consumer_key]        = 'secret-key'
   config.xing[:consumer_secret]     = 'secret-key'
   config.xing[:oauth_token]         = 'secret-key'
   config.xing[:oauth_token_secret]  = 'secret-key'
+  config.xing[:page_size]           = 25 # allowed range <1,100>
 
   config.reed[:activated] = true
   config.reed[:api]       = 'reed.co.uk/api'
   config.reed[:clientid]  = 'secret-key'
   config.reed[:version]   = '1.0'
+  config.reed[:page_size] = 25 # allowed range <1,100>
 
   config.careerbuilder[:activated]  = true
   config.careerbuilder[:api]        = 'api.careerbuilder.com'
   config.careerbuilder[:clientid]   = 'secret-key'
   config.careerbuilder[:version]    = 'v2'
+  config.careerbuilder[:page_size]  = 25 # allowed range <1,100>
 
   config.careerjet[:activated]   = true
   config.careerjet[:api]         = 'public.api.careerjet.net'
+  config.careerjet[:page_size]   = 25 # allowed range <1,99>
 end
 ```
 
@@ -86,7 +91,8 @@ Instance variable *jobs_table* always has last returned job offers.
   p client.jobs_table
 ```
 
-Each API has a limit of returned records. For consistency, each API returns maximum `25` records.
+Each API has a default limit of returned records. For consistency, each API returns maximum `25` records.
+You can change this behavior by setting page_size option in block of HawatelSearchJobs.configure method.
 
 #### Get next page of job offers
 ```ruby

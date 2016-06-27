@@ -14,6 +14,8 @@ module HawatelSearchJobs
             :company  => ''
         }
 
+        RESULT_LIMIT = 25
+
         # Search jobs based on specified keywords or location
         #
         # @param args [Hash]
@@ -32,6 +34,9 @@ module HawatelSearchJobs
         # @return [Hash<OpenStruct>]
         def search(args)
           args[:query] = DEFAULT.merge(args[:query]) if args[:query]
+          args[:page_size] = args[:settings][:page_size].to_s.empty? ? RESULT_LIMIT : args[:settings][:page_size].to_i
+          args[:page_size] = RESULT_LIMIT if args[:page_size] <= 0 || args[:page_size] > 25
+
           if args[:query_key].to_s.empty?
             url_request = build_url(args)
           else
@@ -53,8 +58,7 @@ module HawatelSearchJobs
             end
             attributes[:totalResults] = result['totalResults']
             attributes[:page] = result['pageNumber']
-            #attributes[:last] = (result['totalResults'] / 25) - 1
-            attributes[:last] = paging_info(25, result['totalResults'])
+            attributes[:last] = paging_info(args[:page_size], result['totalResults'])
             attributes[:key]  = url_request
             attributes[:jobs] = parse_raw_data(result)
             OpenStruct.new(attributes)
@@ -75,9 +79,12 @@ module HawatelSearchJobs
         # @return [Hash<OpenStruct>]
         def page(args)
           args[:page] = 0 if args[:page].nil?
+          page_size = args[:settings][:page_size].to_s.empty? ? RESULT_LIMIT : args[:settings][:page_size].to_i
+          page_size = RESULT_LIMIT if page_size <= 0 || page_size > 25
+
           if args[:query_key]
-            url = args[:query_key].gsub(/&start=.*/, '') << "&start=#{args[:page]*25}"
-            search({:query_key => url})
+            url = args[:query_key].gsub(/&start=.*/, '') << "&start=#{args[:page]*page_size}"
+            search({:settings => args[:settings], :query_key => url})
           end
         end
 
@@ -101,10 +108,12 @@ module HawatelSearchJobs
         def build_url(args)
           api_url   = args[:settings][:api]
           publisher = args[:settings][:publisher]
+          version   = args[:settings][:version].to_s.empty? ? '2' : args[:settings][:version]
           location  = args[:query][:location]
           salary    = args[:query][:salary]
           company   = args[:query][:company]
           keywords  = args[:query][:keywords]
+          page_size = args[:page_size]
 
           if !keywords.to_s.empty? && !company.to_s.empty?
             keywords  = "company:#{company}+#{keywords}"
@@ -113,7 +122,7 @@ module HawatelSearchJobs
           end
           if api_url && publisher
             "http://#{api_url}/ads/apisearch?publisher=#{publisher}&q=#{keywords}&salary=#{salary}&l=#{location}"\
-            "&v=2&format=json&limit=25&start=0"
+            "&v=#{version}&sort=date&format=json&limit=#{page_size}&start=0"
           end
         end
 

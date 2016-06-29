@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "HawatelSearchJobs::Api::Indeed"  do
+xdescribe "HawatelSearchJobs::Api::Indeed"  do
 
   before(:each) do
     HawatelSearchJobs.configure do |config|
@@ -16,14 +16,14 @@ describe "HawatelSearchJobs::Api::Indeed"  do
         :query    => { :keywords => 'ruby', :company => '' }
     )}
 
-  xit "metadata from search() result" do
+  it "metadata from search() result" do
     expect(result.totalResults).to be_a_kind_of(Integer)
     expect(result.page).to be_a_kind_of(Integer)
     expect(result.last).to be_a_kind_of(Integer)
     expect(result.key).to include("http")
   end
 
-  xit "job attrubutes from search() result" do
+  it "job attrubutes from search() result" do
     expect(result.jobs.size).to be > 0
     result.jobs.each do |job|
       expect(job.jobtitle).to be_a_kind_of(String)
@@ -33,30 +33,28 @@ describe "HawatelSearchJobs::Api::Indeed"  do
     end
   end
 
-  xit "call page() without page param (default 0)" do
+  it "call page() without page param (default 0)" do
     jobs = HawatelSearchJobs::Api::Indeed.page({:query_key => result.key})
     expect(jobs.page).to eq(0)
   end
 
-  xit "call page() with specified page" do
+  it "call page() with specified page" do
     jobs = HawatelSearchJobs::Api::Indeed.page({:query_key => result.key, :page => 1})
     expect(jobs.page).to eq(1)
   end
 
-  xit "call search() with providing location param" do
+  it "call search() with providing location param" do
     result = HawatelSearchJobs::Api::Indeed.search(:settings => HawatelSearchJobs.indeed, :query => {:location => 'US'})
     result.jobs.each do |job|
       expect(job.location).to include("US")
     end
   end
 
-
-  xit "call search() with providing company param" do
+  it "call search() with providing company param" do
     result = HawatelSearchJobs::Api::Indeed.search(:settings => HawatelSearchJobs.indeed, :query => {:company => 'ibm'})
     result.jobs.each do |job|
-      expect(job.company).to eq("IBM")
+      expect(job.company).to match(/IBM/)
     end
   end
-
 
 end

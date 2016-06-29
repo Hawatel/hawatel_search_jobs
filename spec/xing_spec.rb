@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'xing_api'
 
-describe "HawatelSearchJobs::Api::Xing"  do
+xdescribe "HawatelSearchJobs::Api::Xing"  do
 
   before(:each) do
     HawatelSearchJobs.configure do |config|
@@ -19,13 +19,13 @@ describe "HawatelSearchJobs::Api::Xing"  do
       :query    => { :keywords => 'ruby', :company => '' }
   )}
 
-  xit "metadata from search() result" do
+  it "metadata from search() result" do
     expect(result.page).to be_a_kind_of(Integer)
     expect(result.last).to be_a_kind_of(Integer)
     expect(result.totalResults).to be_a_kind_of(Integer)
   end
 
-  xit "job attributes from search() result" do
+  it "job attributes from search() result" do
     result.jobs.each do |job|
       expect(job.jobtitle).to be_a_kind_of(String)
       expect(job.location).to be_a_kind_of(String)
@@ -34,15 +34,14 @@ describe "HawatelSearchJobs::Api::Xing"  do
     end
   end
 
-  xit "call page() without specified page (default 0)" do
+  it "call page() without specified page (default 0)" do
     jobs = HawatelSearchJobs::Api::Xing.page({:query_key => result.key})
     expect(jobs.page).to eq(0)
   end
 
-  xit "call page() with specified page" do
+  it "call page() with specified page" do
     jobs = HawatelSearchJobs::Api::Xing.page({:query_key => result.key, :page => 1})
     expect(jobs.page).to eq(1)
   end
-
 
 end

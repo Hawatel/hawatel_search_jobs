@@ -102,9 +102,9 @@ Each API has a limit of returned records. For consistency, each API returns maxi
   
   job_offers = Array.new
   
-  while(client.next) do
+  begin
     job_offers << client.jobs_table
-  end
+  end while(client.next)
 ```
 If keywords will be too general probably each API will return loads of data and then a daily limit for an API provider can be exceeded.
 Reed about your daily limit for each API on the provider side.

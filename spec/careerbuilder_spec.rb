@@ -1,14 +1,16 @@
 require 'spec_helper'
 
-describe HawatelSearchJobs::Api::Careerbuilder do
+xdescribe HawatelSearchJobs::Api::Careerbuilder do
+  before(:each) do
+    HawatelSearchJobs.configure do |config|
+      config.careerbuilder[:api]      = 'api.careerbuilder.com'
+      config.careerbuilder[:version]  = 'v2'
+      config.careerbuilder[:clientid] = ''
+    end
+  end
+
   context 'APIs returned jobs' do
     before(:each) do
-      HawatelSearchJobs.configure do |config|
-        config.careerbuilder[:api]      = 'api.careerbuilder.com'
-        config.careerbuilder[:version]  = 'v2'
-        config.careerbuilder[:clientid] = ''
-      end
-
       @query_api = {:keywords => 'ruby', :location => ''}
       @result = HawatelSearchJobs::Api::Careerbuilder.search(
           :settings => HawatelSearchJobs.careerbuilder,
@@ -18,13 +20,13 @@ describe HawatelSearchJobs::Api::Careerbuilder do
           })
     end
 
-    xit '#search' do
+    it '#search' do
       validate_result(@result, @query_api)
       expect(@result.page).to be >= 0
       expect(@result.last).to be >= 0
     end
 
-    xit '#page' do
+    it '#page' do
       validate_result(@result, @query_api)
       page_result = HawatelSearchJobs::Api::Careerbuilder.page({
                                                                    :settings => HawatelSearchJobs.careerbuilder,
@@ -38,12 +40,6 @@ describe HawatelSearchJobs::Api::Careerbuilder do
 
   context 'APIs returned empty table' do
     before(:each) do
-      HawatelSearchJobs.configure do |config|
-        config.careerbuilder[:api]      = 'api.careerbuilder.com'
-        config.careerbuilder[:version]  = 'v2'
-        config.careerbuilder[:clientid] = ''
-      end
-
       @query_api = {:keywords => 'job-not-found-zero-records', :location => 'London'}
       @result = HawatelSearchJobs::Api::Careerbuilder.search(
           :settings => HawatelSearchJobs.careerbuilder,
@@ -53,7 +49,7 @@ describe HawatelSearchJobs::Api::Careerbuilder do
           })
     end
 
-    xit '#search' do
+    it '#search' do
       validate_result(@result, @query_api)
       expect(@result.totalResults).to eq(0)
       expect(@result.page).to be_nil
@@ -61,7 +57,7 @@ describe HawatelSearchJobs::Api::Careerbuilder do
       expect(@result.jobs).to be_nil
     end
 
-    xit '#page' do
+    it '#page' do
       validate_result(@result, @query_api)
       page_result = HawatelSearchJobs::Api::Careerbuilder.page({
                                                                    :settings => HawatelSearchJobs.careerbuilder,

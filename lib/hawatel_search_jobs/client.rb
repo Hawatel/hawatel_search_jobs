@@ -29,7 +29,14 @@ module HawatelSearchJobs
     def initialize
       APIS.each do |api|
         metaclasses.send(:attr_reader, api.downcase.to_sym)
-        instance_variable_set("@#{api.downcase}", HawatelSearchJobs.instance_variable_get("@"+api.downcase))
+        api_conf = HawatelSearchJobs.instance_variable_get("@"+api.downcase)
+
+        if api_conf.nil?
+          HawatelSearchJobs.configure
+          api_conf = HawatelSearchJobs.instance_variable_get("@"+api.downcase)
+        end
+
+        instance_variable_set("@#{api.downcase}", api_conf.dup)
       end
     end
 

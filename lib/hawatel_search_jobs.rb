@@ -17,7 +17,7 @@ module HawatelSearchJobs
       @reed           = default_reed(Hash.new)
       @careerbuilder  = default_careerbuilder(Hash.new)
       @careerjet      = default_careerjet(Hash.new)
-      yield self
+      yield self if block_given?
       true
     end
 

@@ -5,5 +5,6 @@ module HawatelSearchJobs
     require 'hawatel_search_jobs/api/xing'
     require 'hawatel_search_jobs/api/careerbuilder'
     require 'hawatel_search_jobs/api/careerjet'
+    require 'hawatel_search_jobs/api/upwork'
   end
 end

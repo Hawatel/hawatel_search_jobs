@@ -7,7 +7,7 @@ module HawatelSearchJobs
   require 'hawatel_search_jobs/client'
 
   class << self
-    attr_accessor :indeed, :xing, :reed, :careerbuilder, :careerjet
+    attr_accessor :indeed, :xing, :reed, :careerbuilder, :careerjet, :upwork
 
     ##
     # How to configure APIs go to example {HawatelSearchJobs::Client#search_jobs}
@@ -17,6 +17,7 @@ module HawatelSearchJobs
       @reed           = default_reed(Hash.new)
       @careerbuilder  = default_careerbuilder(Hash.new)
       @careerjet      = default_careerjet(Hash.new)
+      @upwork         = default_upwork(Hash.new)
       yield self if block_given?
       true
     end
@@ -59,6 +60,16 @@ module HawatelSearchJobs
       settings[:version]    = 'v2'
       return settings
     end
+
+    def default_upwork(settings)
+      settings[:activated]          = false
+      settings[:consumer_key]       = ''
+      settings[:consumer_secret]    = ''
+      settings[:oauth_token]        = ''
+      settings[:oauth_token_secret] = ''
+      return settings
+    end
+
   end
 
 end

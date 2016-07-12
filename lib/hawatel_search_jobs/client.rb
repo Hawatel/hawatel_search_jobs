@@ -12,11 +12,13 @@ module HawatelSearchJobs
   #   @return [Hash] settings of API
   # @!attribute [rw] careerjet
   #   @return [Hash] settings of API
+  # @!attribute [rw] upwork
+  #   @return [Hash] settings of API
   class Client
     include HawatelSearchJobs::Api
 
     # Values have to be the same name like module name of usesd APIs (HawatelSearchJobs::Api::[ApiName])
-    APIS = ['Indeed', 'Xing', 'Reed', 'Careerbuilder', 'CareerJet']
+    APIS = ['Indeed', 'Xing', 'Reed', 'Careerbuilder', 'CareerJet', 'Upwork']
 
     attr_reader :jobs_table
 
@@ -79,6 +81,11 @@ module HawatelSearchJobs
     #           config.careerjet[:activated]   = true
     #           config.careerjet[:api]         = 'public.api.careerjet.net'
     #           config.careerjet[:page_size]   = 25 # allowed range <1,99>
+    #
+    #           config.upwork[:activated]           = true
+    #           config.upwork[:consumer_key]        = 'secret-key'
+    #           config.upwork[:consumer_secret]     = 'secret-key'
+    #           config.upwork[:page_size]           = 25 # allowed range <1,100>
     #         end
     #
     #       client = HawatelSearchJobs::Client.new
@@ -89,6 +96,7 @@ module HawatelSearchJobs
     #       p client.jobs_table[:reed]
     #       p client.jobs_table[:careerbuilder]
     #       p client.jobs_table[:careerjet]
+    #       p client.jobs_table[:upwork]
     #
     #       client.next
     # @return [Hash] First page of result for all providers (default maximum 25 records for each page)
@@ -133,8 +141,7 @@ module HawatelSearchJobs
 
     # Sum jobs offers from specified api or count all
     #
-    # @param args [Hash]
-    # @option args [String] :api name
+    # @param api [String] api name
     # @example
     #   p client.count
     #   p client.count('indeed')

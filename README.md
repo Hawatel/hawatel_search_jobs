@@ -6,7 +6,7 @@
 
 # Hawatel Search Jobs
 
-Hawatel_search_jobs, it is gem which provides ease access to API from popular job websites to get current job offers. At this moment, supported backends are indeed.com, careerjet.com, xing.com, careerbuilder.com and reed.co.uk.
+Hawatel_search_jobs, it is gem which provides ease access to API from popular job websites to get current job offers. At this moment, supported backends are indeed.com, careerjet.com, xing.com, careerbuilder.com, reed.co.uk, and upwork.com.
 
 Before you can start using the gem, you need have an accounts/tokens for each portal where is required by API.
 
@@ -59,6 +59,13 @@ HawatelSearchJobs.configure do |config|
   config.careerjet[:activated]   = true
   config.careerjet[:api]         = 'public.api.careerjet.net'
   config.careerjet[:page_size]   = 25 # allowed range <1,99>
+  
+  config.upwork[:activated]           = true
+  config.upwork[:consumer_key]        = 'secret-key'
+  config.upwork[:consumer_secret]     = 'secret-key'
+  config.upwork[:oauth_token]         = 'secret-key'
+  config.upwork[:oauth_token_secret]  = 'secret-key'
+  config.upwork[:page_size]           = 25 # allowed range <1,100>
 end
 ```
 
@@ -68,6 +75,7 @@ end
  3. Reed: https://www.reed.co.uk/developers/jobseeker
  4. Careerbuilder: http://developer.careerbuilder.com
  5. Careerjet: secret-key is no needed (http://www.careerjet.com/partners/api/)
+ 6. Upwork: https://developers.upwork.com
 
 #### Get first page of job offers
 There are two ways to read the returned job offers.
@@ -81,6 +89,7 @@ There are two ways to read the returned job offers.
     p result[:reed]
     p result[:careerbuilder]
     p result[:careerjet]
+    p result[:upwork]
 ```
 
 + Access to the instance variable jobs_table.

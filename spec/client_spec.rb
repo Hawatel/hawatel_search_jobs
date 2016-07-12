@@ -50,6 +50,14 @@ describe HawatelSearchJobs::Client do
         config.careerjet[:activated]   =true
         config.careerjet[:api]   = 'public.api.careerjet.net'
         config.careerjet[:page_size]   = 70
+
+        config.upwork[:activated] = false
+        config.upwork[:consumer_key]       = ''
+        config.upwork[:consumer_secret]    = ''
+        config.upwork[:oauth_token]        = ''
+        config.upwork[:oauth_token_secret] = ''
+        config.upwork[:page_size]          = 20
+
       end
     end
 
